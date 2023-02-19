@@ -2,6 +2,10 @@
 
 This project is to generate podcast episode summaries by using OpenAI and Deepgram.
 
+## Limits
+
+- The maximum number of tokens allowed by the context of the model is 4096, we could encounter the error when processing the large audio resource.
+
 ## Running Locally
 
 After cloning the repo, we need to create two API keys and put them in `.env` file.
