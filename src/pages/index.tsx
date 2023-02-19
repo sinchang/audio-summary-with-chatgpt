@@ -43,7 +43,7 @@ const Home: NextPage = () => {
         <input
           type='text'
           onChange={handleUrlChange}
-          placeholder='Type the audio url here'
+          placeholder='Type the audio url here (English only)'
           className='input input-bordered w-full max-w-xs mt-6'
         />
         <button
