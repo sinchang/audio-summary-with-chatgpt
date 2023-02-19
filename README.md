@@ -1,6 +1,6 @@
 # Podcast Summary With ChatGPT
 
-This project is to generate podcast eposide summary by using OpenAI and Deepgram.
+This project is to generate podcast episode summaries by using OpenAI and Deepgram.
 
 ## Running Locally
 
