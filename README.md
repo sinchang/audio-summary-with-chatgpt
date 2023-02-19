@@ -1,4 +1,4 @@
-# Podcast Summary With ChatGPT
+# [Podcast Summary With ChatGPT](https://podcast-summary-with-chatgpt.vercel.app?utm_source=github)
 
 This project is to generate podcast episode summaries by using OpenAI and Deepgram.
 
