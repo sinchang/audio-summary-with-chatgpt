@@ -49,6 +49,7 @@ const Home: NextPage = () => {
         <button
           className={`btn mt-6 ${loading ? 'loading' : ''}`}
           onClick={generateBio}
+          disabled={loading || !audioUrl}
         >
           Generate Summary
         </button>
