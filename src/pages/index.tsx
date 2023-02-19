@@ -16,6 +16,7 @@ const Home: NextPage = () => {
 
   const generateBio = async () => {
     setLoading(true)
+    setGeneratedSummary('')
     const response = await fetch(`/api/transcription?url=${audioUrl}`)
     const json = await response.json()
 

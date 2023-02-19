@@ -53,7 +53,11 @@ export default async function handler(
     summarize the text below:\n${transcript}
   `
 
-  const summaryResponse = await chatApi.sendMessage(q)
+  try {
+    const summaryResponse = await chatApi.sendMessage(q)
 
-  res.status(200).json({ message: summaryResponse.text })
+    res.status(200).json({ message: summaryResponse.text })
+  } catch (e: any) {
+    res.status(500).json({ message: e.message || 'Internal Error' })
+  }
 }
