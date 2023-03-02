@@ -62,16 +62,16 @@ const Home: NextPage = () => {
           Generate Summary & Transcript
         </button>
         <div className='flex flex-row justify-around w-full gap-6'>
-          {summary ? (
-            <section className='m-6'>
-              <h3 className='font-bold'>Summary</h3>
-              <Balancer className='mt-6'>{summary}</Balancer>
-            </section>
-          ) : null}
           {transcript ? (
             <section className='m-6'>
               <h3 className='font-bold'>Transcript</h3>
               <Balancer className='mt-6'>{transcript}</Balancer>
+            </section>
+          ) : null}
+          {summary ? (
+            <section className='m-6'>
+              <h3 className='font-bold'>Summary</h3>
+              <Balancer className='mt-6'>{summary}</Balancer>
             </section>
           ) : null}
         </div>

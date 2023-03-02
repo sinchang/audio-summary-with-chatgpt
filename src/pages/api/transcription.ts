@@ -47,22 +47,22 @@ export default async function handler(
 
     const transcript = transcriptionResponse.data.text
 
-    if (!transcript) {
-      return res.status(500).json({ message: 'transcript is not found' })
-    }
-
     const q = `summarize the text below:\n${transcript}`
 
     try {
-      const summaryResponse = await openai.createCompletion({
-        prompt: q,
-        model: 'text-davinci-003',
-        max_tokens: 4096,
+      const summaryResponse = await openai.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'user',
+            content: q,
+          },
+        ],
       })
 
       return res
         .status(200)
-        .json({ summary: summaryResponse.data.choices[0].text, transcript })
+        .json({ summary: summaryResponse.data.choices[0].message?.content, transcript })
     } catch {}
 
     res.status(200).json({ transcript })

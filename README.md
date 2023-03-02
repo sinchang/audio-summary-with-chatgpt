@@ -2,10 +2,6 @@
 
 This project is to generate podcast episode summaries and transcripts by using OpenAI.
 
-## limitations
-
-- The maximum number of tokens allowed by the context of the model is 4096, we could encounter the error when processing the large audio resource.
-
 ## Running Locally
 
 After cloning the repo, we need to create OpenAI key and put it in `.env` file.
