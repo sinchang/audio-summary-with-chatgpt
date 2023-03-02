@@ -4,20 +4,29 @@ import { Footer } from '@/components/Footer'
 import type { NextPage } from 'next'
 import { ChangeEvent, useState } from 'react'
 import toast from 'react-hot-toast'
+import Balancer from 'react-wrap-balancer'
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false)
-  const [generatedSummary, setGeneratedSummary] = useState<string>('')
-  const [audioUrl, setAudioUrl] = useState<string>('')
+  const [summary, setSummary] = useState<string>('')
+  const [transcript, setTranscript] = useState<string>('')
+  const [file, setFile] = useState<File | null>(null)
 
-  const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAudioUrl(e.target.value)
+  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    setFile(event.currentTarget.files?.[0] || null)
   }
 
-  const generateBio = async () => {
+  const generate = async () => {
+    if (!file) return
     setLoading(true)
-    setGeneratedSummary('')
-    const response = await fetch(`/api/transcription?url=${audioUrl}`)
+    setSummary('')
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await fetch(`/api/transcription`, {
+      method: 'POST',
+      body: formData,
+    })
     const json = await response.json()
 
     if (!response.ok) {
@@ -26,8 +35,8 @@ const Home: NextPage = () => {
       return
     }
 
-    setGeneratedSummary(json.message)
-
+    setSummary(json.summary)
+    setTranscript(json.transcript)
     setLoading(false)
   }
 
@@ -41,19 +50,31 @@ const Home: NextPage = () => {
       <Header />
       <div className='flex flex-col items-center flex-1'>
         <input
-          type='text'
-          onChange={handleUrlChange}
-          placeholder='Type the audio url here (English only)'
-          className='input input-bordered w-full max-w-xs mt-6'
+          type='file'
+          className='file-input w-full max-w-xs mt-6'
+          onChange={handleFileSelect}
         />
         <button
           className={`btn mt-6 ${loading ? 'loading' : ''}`}
-          onClick={generateBio}
-          disabled={loading || !audioUrl}
+          onClick={generate}
+          disabled={loading || !file}
         >
-          Generate Summary
+          Generate Summary & Transcript
         </button>
-        {generatedSummary ? <p className='mt-6'>{generatedSummary}</p> : null}
+        <div className='flex flex-row justify-around w-full gap-6'>
+          {summary ? (
+            <section className='m-6'>
+              <h3 className='font-bold'>Summary</h3>
+              <Balancer className='mt-6'>{summary}</Balancer>
+            </section>
+          ) : null}
+          {transcript ? (
+            <section className='m-6'>
+              <h3 className='font-bold'>Transcript</h3>
+              <Balancer className='mt-6'>{transcript}</Balancer>
+            </section>
+          ) : null}
+        </div>
       </div>
       <Footer />
     </div>
