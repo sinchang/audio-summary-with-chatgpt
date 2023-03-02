@@ -1,5 +1,5 @@
 {
-  "name": "podcast-summary-with-chatgpt",
+  "name": "audio-summary-with-chatgpt",
   "version": "0.1.0",
   "private": true,
   "scripts": {

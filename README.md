@@ -1,6 +1,6 @@
-# [Podcast Summary With ChatGPT](https://podcast-summary-with-chatgpt.vercel.app?utm_source=github)
+# [Audio Summary With ChatGPT](https://audio-summary-with-chatgpt.vercel.app?utm_source=github)
 
-This project is to generate podcast episode summaries and transcripts by using OpenAI.
+This project is to generate audio summaries and transcripts by using OpenAI.
 
 ## Running Locally
 
@@ -13,3 +13,8 @@ Then, run the application in the command line and it will be available at `http:
 ```bash
 pnpm run dev
 ```
+
+## References
+
+- https://platform.openai.com/docs/api-reference/audio
+- https://platform.openai.com/docs/api-reference/chat/create
