@@ -36,7 +36,7 @@ export default async function handler(
           resolve(fs.createReadStream(files.file.filepath))
         }
 
-        reject('file is not found')
+        return reject('file is not found')
       })
     })
 
@@ -60,16 +60,17 @@ export default async function handler(
         ],
       })
 
-      return res
-        .status(200)
-        .json({ summary: summaryResponse.data.choices[0].message?.content, transcript })
+      return res.status(200).json({
+        summary: summaryResponse.data.choices[0].message?.content,
+        transcript,
+      })
     } catch {}
 
     res.status(200).json({ transcript })
   } catch (e: any) {
     res.status(e?.response?.status || 500).json({
       message: JSON.stringify(
-        e?.response?.data || e?.message || 'Internal Error'
+        e?.response?.data || e?.message || e || 'Internal Error'
       ),
     })
   }
