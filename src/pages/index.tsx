@@ -20,6 +20,7 @@ const Home: NextPage = () => {
     if (!file) return
     setLoading(true)
     setSummary('')
+    setTranscript('')
     const formData = new FormData()
     formData.append('file', file)
 
@@ -27,16 +28,20 @@ const Home: NextPage = () => {
       method: 'POST',
       body: formData,
     })
-    const json = await response.json()
 
-    if (!response.ok) {
-      setLoading(false)
-      toast.error(json.message || response.statusText)
-      return
+    try {
+      const json = await response.json()
+
+      if (!response.ok) {
+        toast.error(json.message || response.statusText)
+        return
+      }
+
+      setSummary(json.summary)
+      setTranscript(json.transcript)
+    } catch (e: any) {
+      toast.error(e.message || 'Something went wrong')
     }
-
-    setSummary(json.summary)
-    setTranscript(json.transcript)
     setLoading(false)
   }
 

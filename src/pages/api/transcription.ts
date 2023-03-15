@@ -14,14 +14,14 @@ type Data = {
   message?: string
 }
 
-const OPEN_API_KEY = process.env.OPENAI_API_KEY
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
-if (!OPEN_API_KEY) {
+if (!OPENAI_API_KEY) {
   throw new Error('OPEN API KEY IS REQUIRED')
 }
 
 const configuration = new Configuration({
-  apiKey: OPEN_API_KEY,
+  apiKey: OPENAI_API_KEY,
 })
 const openai = new OpenAIApi(configuration)
 
