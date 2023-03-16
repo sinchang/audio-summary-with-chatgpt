@@ -1,6 +1,10 @@
-# [Audio Summary With ChatGPT](https://audio-summary-with-chatgpt.vercel.app?utm_source=github)
+# Audio Summary With ChatGPT
 
 This project is to generate audio summaries and transcripts by using OpenAI.
+
+## limitations
+
+- This is an experimental project that may encounter errors when processing large audio resources.
 
 ## Running Locally
 
