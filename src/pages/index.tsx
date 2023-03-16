@@ -5,41 +5,76 @@ import type { NextPage } from 'next'
 import { ChangeEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 import Balancer from 'react-wrap-balancer'
+import { useLocalStorage } from '@/hooks'
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false)
   const [summary, setSummary] = useState<string>('')
   const [transcript, setTranscript] = useState<string>('')
+  const [key, setKey] = useState<string>('')
   const [file, setFile] = useState<File | null>(null)
+  const [storedAPIKey, setAPIKey] = useLocalStorage<string>(
+    'OPENAI_API_KEY',
+    ''
+  )
 
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     setFile(event.currentTarget.files?.[0] || null)
   }
 
   const generate = async () => {
+    if (!storedAPIKey) {
+      return toast.error('API key is not set')
+    }
     if (!file) return
     setLoading(true)
     setSummary('')
     setTranscript('')
     const formData = new FormData()
     formData.append('file', file)
-
-    const response = await fetch(`/api/transcription`, {
-      method: 'POST',
-      body: formData,
-    })
-
+    formData.append('model', 'whisper-1')
     try {
-      const json = await response.json()
+      const transcriptionsResponse = await fetch(
+        `https://api.openai.com/v1/audio/transcriptions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${storedAPIKey}`,
+          },
+          body: formData,
+        }
+      )
 
-      if (!response.ok) {
-        toast.error(json.message || response.statusText)
-         setLoading(false)
-        return
+      const transcriptions = await transcriptionsResponse.json()
+
+      if (!transcriptionsResponse.ok) {
+        throw new Error(transcriptions.error.message)
       }
 
-      setSummary(json.summary)
-      setTranscript(json.transcript)
+      const q = `summarize the text below:\n${transcriptions.text}`
+
+      const completionsResponse = await fetch(
+        `https://api.openai.com/v1/chat/completions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${storedAPIKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [{ role: 'user', content: q }],
+          }),
+        }
+      )
+
+      const completions = await completionsResponse.json()
+
+      if (completionsResponse.ok) {
+        setSummary(completions.choices[0].message.content)
+      }
+
+      setTranscript(transcriptions.text)
     } catch (e: any) {
       toast.error(e.message || 'Something went wrong')
     }
@@ -80,6 +115,34 @@ const Home: NextPage = () => {
               <Balancer className='mt-6'>{summary}</Balancer>
             </section>
           ) : null}
+        </div>
+      </div>
+      <div>
+        <input type='checkbox' id='key-modal' className='modal-toggle' />
+        <div className='modal'>
+          <div className='modal-box'>
+            <h3 className='font-bold text-lg'>OpenAI API Key</h3>
+            <h5 className='text-sm mt-2'>
+              Your key is stored locally in the browser.
+            </h5>
+            <p className='py-4'>
+              <input
+                type='password'
+                placeholder='Type here'
+                className='input w-full input-bordered'
+                onChange={(e) => setKey(e.target.value)}
+              />
+            </p>
+            <div className='modal-action'>
+              <label
+                htmlFor='key-modal'
+                className='btn'
+                onClick={() => setAPIKey(key)}
+              >
+                Save
+              </label>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
