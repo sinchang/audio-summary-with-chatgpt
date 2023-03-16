@@ -34,6 +34,7 @@ const Home: NextPage = () => {
 
       if (!response.ok) {
         toast.error(json.message || response.statusText)
+         setLoading(false)
         return
       }
 
